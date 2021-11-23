@@ -333,14 +333,13 @@
   (def a-zip
     (zip [:a :b [:x :y]]))
 
-  (deep=
-    (node a-zip)
-    (-> a-zip
-        down
-        right
-        right
-        down
-        root))
+  (deep= (node a-zip)
+         (-> a-zip
+             down
+             right
+             right
+             down
+             root))
     # => true
 
   )
@@ -366,19 +365,19 @@
 
 (comment
 
-  (def n-zip
+  (def a-zip
     (zip [:a :b [:x]]))
 
-  (node (df-next n-zip))
+  (node (df-next a-zip))
   # => :a
 
-  (-> n-zip
+  (-> a-zip
       df-next
       df-next
       node)
   # => :b
 
-  (-> n-zip
+  (-> a-zip
       df-next
       df-next
       df-next
@@ -636,42 +635,6 @@
 
   )
 
-(defn insert-left
-  ``
-  Inserts `a-node` as the left sibling of the node at `zloc`,
-  without moving.
-  ``
-  [zloc a-node]
-  (let [[node st] zloc
-        {:ls ls :rs rs} st]
-    (if (not (empty? st))
-      [node
-       (make-state zloc
-                   (s/tuple-push ls a-node)
-                   rs
-                   (st :pnodes)
-                   (st :pstate)
-                   true)]
-      (error "Called `insert-left` at root"))))
-
-(comment
-
-  (def a-zip
-    (zip [:a :b [:x :y]]))
-
-  (-> a-zip
-      down
-      (insert-left :z)
-      root)
-  # => [:z :a :b [:x :y]]
-
-  (try
-    (insert-left a-zip :e)
-    ([e] e))
-  # => "Called `insert-left` at root"
-
-  )
-
 (defn insert-right
   ``
   Inserts `a-node` as the right sibling of the node at `zloc`,
@@ -705,6 +668,42 @@
     (insert-right a-zip :e)
     ([e] e))
   # => "Called `insert-right` at root"
+
+  )
+
+(defn insert-left
+  ``
+  Inserts `a-node` as the left sibling of the node at `zloc`,
+  without moving.
+  ``
+  [zloc a-node]
+  (let [[node st] zloc
+        {:ls ls :rs rs} st]
+    (if (not (empty? st))
+      [node
+       (make-state zloc
+                   (s/tuple-push ls a-node)
+                   rs
+                   (st :pnodes)
+                   (st :pstate)
+                   true)]
+      (error "Called `insert-left` at root"))))
+
+(comment
+
+  (def a-zip
+    (zip [:a :b [:x :y]]))
+
+  (-> a-zip
+      down
+      (insert-left :z)
+      root)
+  # => [:z :a :b [:x :y]]
+
+  (try
+    (insert-left a-zip :e)
+    ([e] e))
+  # => "Called `insert-left` at root"
 
   )
 

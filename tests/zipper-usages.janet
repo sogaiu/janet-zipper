@@ -3,6 +3,8 @@
 # zipper
 (comment
 
+  # XXX
+
   )
 
 # zip
@@ -126,6 +128,8 @@
 # make-state
 (comment
 
+  # XXX
+
   )
 
 # down
@@ -194,7 +198,7 @@
 
   (def a-zip
     (z/zip [[[:a :b :c] :d] :e]))
-  
+
   (-> a-zip
       z/down
       z/down
@@ -221,471 +225,396 @@
 
   )
 
-# # root
-# (comment
-
-#   (def code
-#     ``
-#     (+ 1 2)
-#     ``)
-
-#   (-> code
-#       r/ast
-#       z/zip-down
-#       z/down
-#       z/right-skip-wsc
-#       z/right-skip-wsc
-#       z/root
-#       r/code
-#       (= code))
-#   # => true
-
-#   )
-
-# # df-next, end?
-# (comment
-
-#   (def n-zip
-#     (zip [:a :b [:x]]))
-
-#   (-> n-zip
-#       df-next
-#       df-next
-#       df-next
-#       node)
-#   # => [:x]
-
-#   (-> n-zip
-#       df-next
-#       df-next
-#       df-next
-#       df-next
-#       node)
-#   # => :x
-
-#   (-> n-zip
-#       df-next
-#       df-next
-#       df-next
-#       df-next
-#       df-next
-#       node)
-#   # => [:a :b [:x]]
-
-#   )
-
-# # rightmost
-# (comment
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       z/rightmost
-#       z/node)
-#   # => [:x :y]
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       z/down
-#       z/rightmost
-#       z/node)
-#   # => :y
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       z/down
-#       z/right
-#       z/rightmost
-#       z/node)
-#   # => :y
-
-#   (-> (z/zip ['def 'm {:a 1 :b 2}])
-#       z/down
-#       z/rightmost
-#       z/down
-#       z/rightmost
-#       z/node)
-#   # => [:b 2]
-
-#   (-> (z/zip ['def 'm [:a 1 :b 2]])
-#       z/down
-#       z/rightmost
-#       z/down
-#       z/rightmost
-#       z/node)
-#   # => 2
-
-#   )
-
-# # replace
-# (comment
-
-#   (-> "(+ 1 (/ 2 3))"
-#       r/ast
-#       z/zip-down
-#       z/down
-#       z/rightmost
-#       z/down
-#       z/rightmost
-#       (z/replace [:number "8"])
-#       z/root
-#       r/code)
-#   # => "(+ 1 (/ 2 8))"
-
-#   )
-
-# # edit
-# (comment
-
-#   (-> (zip [1 2 [8 9]])
-#       down
-#       right
-#       right
-#       down
-#       right
-#       (edit dec)
-#       root)
-#   # => [1 2 [8 8]]
-
-#   (-> (zip [1 2 [8 9]])
-#       down
-#       right
-#       right
-#       down
-#       (edit + 2)
-#       root)
-#   # => [1 2 [10 9]]
-
-#   )
-
-# # search
-# (comment
-
-#   (-> "(+ 1 2)"
-#       r/ast
-#       z/zip
-#       (z/search |(match (z/node $)
-#                    [:number "1"]
-#                    true))
-#       (z/edit |(match $
-#                  [:number num-str]
-#                  [:number (-> num-str
-#                               scan-number
-#                               inc
-#                               string)]))
-#       z/root
-#       r/code)
-#   # => "(+ 2 2)"
-
-#   )
-
-# # remove
-# (comment
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/remove
-#       z/root)
-#   # => [:a [:x :y]]
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       z/remove
-#       z/root)
-#   # => [:a :b]
-
-#   )
-
-# # append-child
-# (comment
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       (z/append-child :c)
-#       z/root)
-#   # => [:a :b [:x :y :c]]
-
-#   )
-
-# # insert-child
-# (comment
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       (z/insert-child :c)
-#       z/root)
-#   # => [:a :b [:c :x :y]]
-
-#   )
-
-# # insert-right
-# (comment
-
-#   (-> "(defn my-fn [x] (+ x y))"
-#       r/ast
-#       z/zip-down
-#       z/down
-#       (z/search |(match (z/node $)
-#                    [:bracket-tuple [:symbol "x"]]
-#                    true))
-#       z/down
-#       (z/insert-right [:symbol "y"])
-#       (z/insert-right [:whitespace " "])
-#       z/root
-#       r/code)
-#   # => "(defn my-fn [x y] (+ x y))"
-
-#   (try
-#     (-> "(+ 1 3)"
-#         r/ast
-#         z/zip
-#         (z/insert-right [:keyword ":oops"]))
-#     ([e] e))
-#   # => "Called `insert-right` at root"
-
-#   )
-
-# # insert-left
-# (comment
-
-#   (-> "(a 1)"
-#       r/ast
-#       z/zip-down
-#       z/down
-#       (z/insert-left [:symbol "def"])
-#       (z/insert-left [:whitespace " "])
-#       z/root
-#       r/code)
-#   # => "(def a 1)"
-
-#   (try
-#     (-> "(/ 8 9)"
-#         r/ast
-#         z/zip
-#         (z/insert-left [:keyword ":oops"]))
-#     ([e] e))
-#   # => "Called `insert-left` at root"
-
-#   )
-
-# # lefts
-# (comment
-
-#   (-> (z/zip [:a :b])
-#       z/down
-#       z/right
-#       z/lefts)
-#   # => [:a]
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       z/down
-#       z/right
-#       z/lefts)
-#   # => [:x]
-
-#   )
-
-# # rights
-# (comment
-
-#   (deep=
-#     #
-#     (-> "(+ (- 8 1) 2)"
-#         r/ast
-#         z/zip-down
-#         z/down
-#         z/right-skip-wsc
-#         z/down
-#         z/rights)
-#     #
-#     '[(:whitespace " ")
-#       (:number "8") (:whitespace " ")
-#       (:number "1")])
-#   # => true
-
-#   )
-
-# # df-prev
-# (comment
-
-#   (-> [:a :b [:x :y]]
-#       z/down
-#       z/right
-#       z/right
-#       z/df-prev
-#       z/node)
-#   # => :b
-
-#   (-> [:a :b [:x :y]]
-#       z/down
-#       z/right
-#       z/right
-#       z/down
-#       z/df-prev
-#       z/df-prev
-#       z/node)
-#   # => :b
-
-#   )
-
-# # leftmost
-# (comment
-
-#   (-> (z/zip [:a :b [:x :y]])
-#       z/down
-#       z/right
-#       z/right
-#       z/down
-#       z/leftmost
-#       z/node)
-#   # => :x
-
-#   )
-
-# # path
-# (comment
-
-#   (deep=
-#     #
-#     (-> "(+ (/ 3 8) 2)"
-#         r/ast
-#         z/zip-down
-#         z/down
-#         z/right-skip-wsc
-#         z/down
-#         z/path)
-#     #
-#     '(@[:code
-#         (:tuple
-#           (:symbol "+") (:whitespace " ")
-#           (:tuple
-#             (:symbol "/") (:whitespace " ")
-#             (:number "3") (:whitespace " ")
-#             (:number "8"))
-#           (:whitespace " ") (:number "2"))]
-#        (:tuple
-#          (:symbol "+") (:whitespace " ")
-#          (:tuple
-#            (:symbol "/") (:whitespace " ")
-#            (:number "3") (:whitespace " ")
-#            (:number "8"))
-#          (:whitespace " ") (:number "2"))
-#        (:tuple
-#          (:symbol "/") (:whitespace " ")
-#          (:number "3") (:whitespace " ")
-#          (:number "8"))))
-#   # => true
-
-#   )
-
-# # right-until
-# (comment
-
-#   (def code
-#     ``
-#     [1
-#      # a comment
-#      2]
-#     ``)
-
-#   (-> code
-#       r/ast
-#       z/zip-down
-#       z/down
-#       (z/right-until |(match (z/node $)
-#                       [:comment _]
-#                       false
-#                       #
-#                       [:whitespace _]
-#                       false
-#                       #
-#                       true))
-#       z/node)
-#   # => [:number "2"]
-
-#   (def code
-#     ``
-#     :skip-me
-
-#     [1
-#      # a comment
-#      2]
-#     ``)
-
-#   (-> code
-#       r/ast
-#       z/zip-down
-#       (z/right-until |(match (z/node $)
-#                       [:comment _]
-#                       false
-#                       #
-#                       [:whitespace _]
-#                       false
-#                       #
-#                       true))
-#       z/down
-#       (z/right-until |(match (z/node $)
-#                       [:comment _]
-#                       false
-#                       #
-#                       [:whitespace _]
-#                       false
-#                       #
-#                       true))
-#       z/node)
-#   # => [:number "2"]
-
-#   )
-
-# # left
-# (comment
-
-#   (def a-zip
-#     (zip [:a :b [:x :y]]))
-
-#   (deep=
-#     (down a-zip)
-#     (-> a-zip
-#         down
-#         right
-#         left))
-#   # => true
-
-#   )
-
-# # left-until
-# (comment
-
-#   (-> (r/ast
-#         ``
-#         {:a "hey"
-#          :b "see"
-#          :c "spot"
-#          :x "sit"
-#          :y "!?"}
-#         ``)
-#       z/zip-down
-#       z/down
-#       z/rightmost
-#       (z/left-until |(match (z/node $)
-#                        [:string]
-#                        true))
-#       z/node)
-#   # => [:string `"sit"`]
-
-#   )
+# root
+(comment
+
+  # `root` is typically used with functions that lead to changes:
+  #
+  # * replace
+  # * edit
+  # * insert-child
+  # * append-child
+  # * remove
+  # * insert-left
+  # * insert-right
+
+  )
+
+# df-next
+(comment
+
+  (def a-zip
+    (z/zip [:a :b [:x]]))
+
+  (-> a-zip
+      z/df-next
+      z/df-next
+      z/df-next
+      z/node)
+  # => [:x]
+
+  (-> a-zip
+      z/df-next
+      z/df-next
+      z/df-next
+      z/df-next
+      z/node)
+  # => :x
+
+  (-> a-zip
+      z/df-next
+      z/df-next
+      z/df-next
+      z/df-next
+      z/df-next
+      z/node)
+  # => [:a :b [:x]]
+
+  (-> (z/zip [:a])
+      z/df-next
+      z/df-next
+      z/end?)
+  # => true
+
+  )
+
+# replace
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      (z/replace :x)
+      z/right
+      (z/replace :y)
+      z/right
+      (z/replace [:a :b])
+      z/root)
+  # => [:x :y [:a :b]]
+
+  )
+
+# edit
+(comment
+
+  (-> (z/zip [1 2 [8 9]])
+      z/down
+      z/right
+      z/right
+      z/down
+      z/right
+      (z/edit dec)
+      z/root)
+  # => [1 2 [8 8]]
+
+  (-> (z/zip [1 2 [8 9]])
+      z/down
+      z/right
+      z/right
+      z/down
+      (z/edit + 2)
+      z/root)
+  # => [1 2 [10 9]]
+
+  )
+
+# insert-child
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      (z/insert-child :w)
+      (z/insert-child :v)
+      (z/insert-child [])
+      z/down
+      (z/insert-child :s)
+      z/root)
+  # => [:a :b [[:s] :v :w :x :y]]
+
+  )
+
+# append-child
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      (z/append-child [])
+      z/down
+      z/right
+      z/right
+      (z/append-child :joy)
+      z/root)
+  # => [:a :b [:x :y [:joy]]]
+
+  )
+
+# rightmost
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/rightmost
+      z/node)
+  # => [:x :y]
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/down
+      z/rightmost
+      z/node)
+  # => :y
+
+  (-> (z/zip ['def 'm [:a 1 :b 2]])
+      z/down
+      z/rightmost
+      z/down
+      z/rightmost
+      z/node)
+  # => 2
+
+  (-> (z/zip ['def 'm {:a 1 :b 2}])
+      z/down
+      z/rightmost
+      z/down
+      z/rightmost
+      z/node)
+  # => [:b 2]
+
+  )
+
+# remove
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/remove
+      z/root)
+  # => [:a [:x :y]]
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/remove
+      z/root)
+  # => [:a :b]
+
+  (-> (z/zip [:a :b :c])
+      z/down
+      z/right
+      z/right
+      z/remove
+      z/root)
+  # => [:a :b]
+
+  (-> (z/zip [:a :b :c])
+      z/down
+      z/right
+      z/remove
+      z/right
+      z/remove
+      z/root)
+  # => [:a]
+
+  # XXX: something seems wonky with `remove`
+
+  )
+
+# left
+(comment
+
+  (def a-zip
+    (z/zip [:a :b [:x :y]]))
+
+  (deep= (z/down a-zip)
+         (-> a-zip
+             z/down
+             z/right
+             z/left))
+  # => true
+
+  (-> a-zip
+      z/down
+      z/right
+      z/right
+      z/down
+      z/right
+      z/left
+      z/node)
+  # => :x
+
+  )
+
+# df-prev
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/df-prev
+      z/node)
+  # => :b
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/down
+      z/df-prev
+      z/df-prev
+      z/node)
+  # => :b
+
+  )
+
+# insert-right
+(comment
+
+  (-> (z/zip [:a [:b]])
+      z/down
+      z/right
+      z/down
+      (z/insert-right :c)
+      z/root)
+  # => [:a [:b :c]]
+
+  (-> (z/zip [:a])
+      z/down
+      (z/insert-right [:b])
+      z/right
+      z/down
+      (z/insert-right :c)
+      z/root)
+  # => [:a [:b :c]]
+
+  )
+
+# insert-left
+(comment
+
+  (-> (z/zip [:b])
+      z/down
+      (z/insert-left :a)
+      z/root)
+  # => [:a :b]
+
+  (-> (z/zip [:c])
+      z/down
+      (z/insert-left [:b])
+      z/left
+      z/down
+      (z/insert-left :a)
+      z/root)
+  # => [[:a :b] :c]
+
+  )
+
+# rights
+(comment
+
+  (-> (z/zip [:a :b])
+      z/down
+      z/rights)
+  # => [:b]
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/down
+      z/rights)
+  # => [:y]
+
+  )
+
+# lefts
+(comment
+
+  (-> (z/zip [:a :b])
+      z/down
+      z/right
+      z/lefts)
+  # => [:a]
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/down
+      z/right
+      z/lefts)
+  # => [:x]
+
+  )
+
+# leftmost
+(comment
+
+  (-> (z/zip [:a :b [:x :y]])
+      z/down
+      z/right
+      z/right
+      z/down
+      z/leftmost
+      z/node)
+  # => :x
+
+  )
+
+# path
+(comment
+
+  # XXX
+
+  )
+
+# right-until
+(comment
+
+  (-> (z/zip [:a :b :c
+              [:crumb :h :j :k
+               [:crumb :prize]]])
+      z/down
+      (z/right-until |(match (z/node $)
+                        [:crumb]
+                        true))
+      z/down
+      (z/right-until |(match (z/node $)
+                        [:crumb]
+                        true))
+      z/down
+      z/right
+      z/node)
+  # => :prize
+
+  )
+
+# search
+(comment
+
+  (-> (z/zip [:a :b :c
+              [:crumb :h :j :k
+               [:fake-crumb :dwarf :elf :fiend
+                [:crumb :prize]]]])
+      (z/search |(match (z/node $)
+                   [:crumb]
+                   true))
+      z/down
+      (z/search |(match (z/node $)
+                   [:crumb]
+                   true))
+      z/down
+      z/right
+      z/node)
+  # => :prize
+
+  )
