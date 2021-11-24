@@ -424,7 +424,12 @@
       z/root)
   # => [:a]
 
-  # XXX: something seems wonky with `remove`
+  # tests (length ls) == 0 case
+  (-> (z/zip [:a :b :c])
+      z/down
+      z/remove
+      z/root)
+  # => [:b :c]
 
   )
 

@@ -519,6 +519,7 @@
   (let [[node st] zloc
         {:ls ls
          :pnodes pnodes
+         :pstate pstate
          :rs rs} st]
     #
     (defn recur
@@ -534,14 +535,14 @@
                             (s/butlast ls)
                             rs
                             pnodes
-                            (st :pstate)
+                            pstate
                             true)])
         [(make-node zloc (last pnodes) rs)
          (make-state zloc
-                     ls
-                     rs
-                     pnodes
-                     (st :pstate)
+                     (pstate :ls)
+                     (pstate :rs)
+                     (pstate :pnodes)
+                     (pstate :pstate)
                      true)])
       (error "Called `remove` at root"))))
 
