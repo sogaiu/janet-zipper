@@ -603,20 +603,37 @@
 
   )
 
-# search
+
+# search-from
+(comment
+
+  (-> (z/zip [:a :b])
+      z/down
+      (z/search-from |(match (z/node $)
+                        :a
+                        true))
+      (z/search-from |(match (z/node $)
+                        :a
+                        true))
+      z/node)
+  # => :a
+
+  )
+
+# search-after
 (comment
 
   (-> (z/zip [:a :b :c
               [:crumb :h :j :k
                [:fake-crumb :dwarf :elf :fiend
                 [:crumb :prize]]]])
-      (z/search |(match (z/node $)
-                   [:crumb]
-                   true))
+      (z/search-after |(match (z/node $)
+                         [:crumb]
+                         true))
       z/down
-      (z/search |(match (z/node $)
-                   [:crumb]
-                   true))
+      (z/search-after |(match (z/node $)
+                         [:crumb]
+                         true))
       z/down
       z/right
       z/node)

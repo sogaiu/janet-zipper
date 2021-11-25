@@ -848,7 +848,7 @@
 
   )
 
-(defn search
+(defn search-from
   ``
   Successively call `pred` on z-locations starting at `zloc`
   in depth-first order.  If a call to `pred` returns a
@@ -856,17 +856,59 @@
   Otherwise, return nil.
   ``
   [zloc pred]
-  (when-let [next-zloc (df-next zloc)]
-    (if (pred next-zloc)
-      next-zloc
-      (search next-zloc pred))))
+  (if (pred zloc)
+    zloc
+    (when-let [next-zloc (df-next zloc)]
+      (search-from next-zloc pred))))
 
 (comment
 
+  (-> (zip [:a :b :c])
+      down
+      (search-from |(match (node $)
+                      :b
+                      true))
+      node)
+  # => :b
+
+  (-> (zip [:a :b :c])
+      down
+      (search-from |(match (node $)
+                      :a
+                      true))
+      node)
+  # => :a
+
+  )
+
+(defn search-after
+  ``
+  Successively call `pred` on z-locations starting after
+  `zloc` in depth-first order.  If a call to `pred` returns a
+  truthy value, return the corresponding z-location.
+  Otherwise, return nil.
+  ``
+  [zloc pred]
+  (when-let [next-zloc (df-next zloc)]
+    (if (pred next-zloc)
+      next-zloc
+      (search-after next-zloc pred))))
+
+(comment
+
+  (-> (zip [:b :a :b])
+      down
+      (search-after |(match (node $)
+                       :b
+                       true))
+      left
+      node)
+  # => :a
+
   (-> (zip [:a [:b :c [2 [3 :smile] 5]]])
-      (search |(match (node $)
-                 [_ :smile]
-                 true))
+      (search-after |(match (node $)
+                       [_ :smile]
+                       true))
       down
       node)
   # => 3
