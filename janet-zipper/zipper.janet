@@ -859,6 +859,8 @@
   (if (pred zloc)
     zloc
     (when-let [next-zloc (df-next zloc)]
+      (when (end? next-zloc)
+        (break nil))
       (search-from next-zloc pred))))
 
 (comment
@@ -870,6 +872,13 @@
                       true))
       node)
   # => :b
+
+  (-> (zip [:a :b :c])
+      down
+      (search-from |(match (node $)
+                      :d
+                      true)))
+  # => nil
 
   (-> (zip [:a :b :c])
       down
@@ -889,6 +898,8 @@
   Otherwise, return nil.
   ``
   [zloc pred]
+  (when (end? zloc)
+    (break nil))
   (when-let [next-zloc (df-next zloc)]
     (if (pred next-zloc)
       next-zloc
@@ -904,6 +915,13 @@
       left
       node)
   # => :a
+
+  (-> (zip [:b :a :b])
+      down
+      (search-after |(match (node $)
+                       :d
+                       true)))
+  # => nil
 
   (-> (zip [:a [:b :c [2 [3 :smile] 5]]])
       (search-after |(match (node $)
