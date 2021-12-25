@@ -838,10 +838,10 @@
       right
       down
       (right-until |(match (node $)
-                      [:comment _]
+                      [:comment]
                       false
                       #
-                      [:whitespace _]
+                      [:whitespace]
                       false
                       #
                       true))
