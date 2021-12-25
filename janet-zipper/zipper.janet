@@ -351,12 +351,14 @@
   Does not move if already at the end.
   ``
   [zloc]
+  #
   (defn recur
     [loc]
     (if (up loc)
       (or (right (up loc))
           (recur (up loc)))
       [(node loc) :end]))
+  #
   (if (end? zloc)
     zloc
     (or (and (branch? zloc) (down zloc))
