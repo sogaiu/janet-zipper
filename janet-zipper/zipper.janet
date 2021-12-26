@@ -934,3 +934,42 @@
   # => 3
 
   )
+
+(defn unwrap
+  ``
+  If the node at `zloc` is a branch node, "unwrap" its children in
+  place.  If `zloc`'s node is not a branch node, do nothing.
+  ``
+  [zloc]
+  (unless (branch? zloc)
+    (break zloc))
+  #
+  (def kids (children zloc))
+  (var i 0)
+  (var kid (get kids 0))
+  (var curr-zloc zloc)
+  (while (and kid
+              (< i (length kids)))
+    (set curr-zloc
+         (insert-left curr-zloc kid))
+    (++ i)
+    (set kid (get kids i)))
+  (remove curr-zloc))
+
+(comment
+
+  (-> (zip [:a :b [:x :y]])
+      down
+      right
+      right
+      unwrap
+      root)
+  # => [:a :b :x :y]
+
+  (-> (zip [:a :b [:x :y]])
+      down
+      unwrap
+      root)
+  # => [:a :b [:x :y]]
+
+  )
