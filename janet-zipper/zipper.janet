@@ -973,3 +973,90 @@
   # => [:a :b [:x :y]]
 
   )
+
+(defn wrap
+  ``
+  Replace nodes from `start-zloc` through `end-zloc` with a single
+  node of the same type as `wrap-node` containing the nodes from
+  `start-zloc` through `end-zloc`.
+
+  If `end-zloc` is not specified, just wrap `start-zloc`.
+
+  The caller is responsible for ensuring the value of `end-zloc`
+  is somewhere to the right of `start-zloc`.  Throws an error if
+  an inappropriate value is specified for `end-zloc`.
+  ``
+  [start-zloc wrap-node &opt end-zloc]
+  (default end-zloc start-zloc)
+  #
+  # 1. collect all nodes to wrap
+  #
+  (def kids @[])
+  (var cur-zloc start-zloc)
+  (while (and cur-zloc
+              # XXX: expensive?
+              (not (deep= cur-zloc end-zloc))) # left to right
+    (array/push kids (node cur-zloc))
+    (set cur-zloc (right cur-zloc)))
+  (when (nil? cur-zloc)
+    (error "Called `wrap` with invalid value for `end-zloc`."))
+  # also collect the last node
+  (array/push kids (node end-zloc))
+  #
+  # 2. replace locations that will be removed with non-container nodes
+  #
+  (def dummy-node
+    (make-node start-zloc wrap-node (tuple)))
+  (set cur-zloc start-zloc)
+  # trying to do this together in step 1 is not straight-forward
+  # because the desired exiting condition for the while loop depends
+  # on cur-zloc becomnig end-zloc -- if `replace` were to be used
+  # there, the termination condition never gets fulfilled properly.
+  (for i 0 (dec (length kids)) # left to right again
+    (set cur-zloc
+         (-> (replace cur-zloc dummy-node)
+             right)))
+  (set cur-zloc
+       (replace cur-zloc dummy-node))
+  #
+  # 3. remove all relevant locations
+  #
+  (def new-node
+    (make-node start-zloc wrap-node (tuple ;kids)))
+  (for i 0 (dec (length kids)) # right to left
+    (set cur-zloc
+         (remove cur-zloc)))
+  # 4. put the new container node into place
+  (replace cur-zloc new-node))
+
+(comment
+
+  (def start-zloc
+    (-> (zip [:a [:b] :c :x])
+        down
+        right))
+
+  (node start-zloc)
+  # => [:b]
+
+  (-> (wrap start-zloc [])
+      root)
+  # => [:a [[:b]] :c :x]
+
+  (def end-zloc
+    (right start-zloc))
+
+  (node end-zloc)
+  # => :c
+
+  (-> (wrap start-zloc [] end-zloc)
+      root)
+  # => [:a [[:b] :c] :x]
+
+  (try
+    (-> (wrap end-zloc [] start-zloc)
+        root)
+    ([e] e))
+  # => "Called `wrap` with invalid value for `end-zloc`."
+
+  )

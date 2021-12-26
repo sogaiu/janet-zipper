@@ -639,3 +639,68 @@
   # => :prize
 
   )
+
+# unwrap
+(comment
+
+  # XXX
+
+  )
+
+# wrap
+(comment
+
+  (def a-zloc
+    (-> (z/zip [:a :b :c :x])
+        z/down))
+
+  (z/node a-zloc)
+  # => :a
+
+  (def b-zloc
+    (z/right a-zloc))
+
+  (z/node b-zloc)
+  # => :b
+
+  (def c-zloc
+    (z/right b-zloc))
+
+  (z/node c-zloc)
+  # => :c
+
+  (def x-zloc
+    (z/right c-zloc))
+
+  (z/node x-zloc)
+  # => :x
+
+  (-> (z/wrap a-zloc [] b-zloc)
+      z/root)
+  # => [[:a :b] :c :x]
+
+  (-> (z/wrap a-zloc [] c-zloc)
+      z/root)
+  # => [[:a :b :c] :x]
+
+  (-> (z/wrap a-zloc [] x-zloc)
+      z/root)
+  # => [[:a :b :c :x]]
+
+  (-> (z/wrap b-zloc [] x-zloc)
+      z/root)
+  # => [:a [:b :c :x]]
+
+  (-> (z/wrap c-zloc [])
+      z/root)
+  # => [:a :b [:c] :x]
+
+  (-> (z/wrap c-zloc [] x-zloc)
+      z/root)
+  # => [:a :b [:c :x]]
+
+  (-> (z/wrap x-zloc [])
+      z/root)
+  # => [:a :b :c [:x]]
+
+  )
