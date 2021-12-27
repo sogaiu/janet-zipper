@@ -643,7 +643,15 @@
 # unwrap
 (comment
 
-  # XXX
+  (-> (z/zip [:a :b [:x [:y :z]]])
+      z/down
+      z/right
+      z/right
+      z/unwrap
+      z/right
+      z/unwrap
+      z/root)
+  # => [:a :b :x :y :z]
 
   )
 

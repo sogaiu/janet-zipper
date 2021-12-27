@@ -939,22 +939,29 @@
   ``
   If the node at `zloc` is a branch node, "unwrap" its children in
   place.  If `zloc`'s node is not a branch node, do nothing.
+
+  Throws an error if `zloc` corresponds to a top-most container.
   ``
   [zloc]
   (unless (branch? zloc)
     (break zloc))
   #
+  (when (empty? (state zloc))
+    (error "Called `unwrap` at root"))
+  #
   (def kids (children zloc))
-  (var i 0)
-  (var kid (get kids 0))
+  (var i (dec (length kids)))
   (var curr-zloc zloc)
-  (while (and kid
-              (< i (length kids)))
+  (while (<= 0 i) # right to left
     (set curr-zloc
-         (insert-left curr-zloc kid))
-    (++ i)
-    (set kid (get kids i)))
-  (remove curr-zloc))
+         (insert-right curr-zloc (get kids i)))
+    (-- i))
+  # try to end up at a sensible spot
+  (set curr-zloc
+       (remove curr-zloc))
+  (if-let [ret-zloc (right curr-zloc)]
+    ret-zloc
+    curr-zloc))
 
 (comment
 
@@ -971,6 +978,26 @@
       unwrap
       root)
   # => [:a :b [:x :y]]
+
+  (-> (zip [[:a]])
+      down
+      unwrap
+      root)
+  # => [:a]
+
+  (-> (zip [[:a :b] [:x :y]])
+      down
+      down
+      remove
+      unwrap
+      root)
+  # => [:b [:x :y]]
+
+  (try
+    (-> (zip [:a :b [:x :y]])
+        unwrap)
+    ([e] e))
+  # => "Called `unwrap` at root"
 
   )
 
