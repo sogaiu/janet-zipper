@@ -1022,7 +1022,8 @@
   (var cur-zloc start-zloc)
   (while (and cur-zloc
               # XXX: expensive?
-              (not (deep= cur-zloc end-zloc))) # left to right
+              (not (deep= (node cur-zloc)
+                          (node end-zloc)))) # left to right
     (array/push kids (node cur-zloc))
     (set cur-zloc (right cur-zloc)))
   (when (nil? cur-zloc)
