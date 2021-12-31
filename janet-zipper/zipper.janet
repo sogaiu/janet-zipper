@@ -74,13 +74,14 @@
   (def [the-node the-state]
     (zip a-node))
 
-  (deep= the-node a-node)
-  # => true
+  the-node
+  # =>
+  a-node
 
   # merge is used to "remove" the prototype table of `st`
-  (deep= (merge {} the-state)
-         @{})
-  # => true
+  (merge {} the-state)
+  # =>
+  @{}
 
   )
 
@@ -92,7 +93,8 @@
 (comment
 
   (node (zip [:a :b [:x :y]]))
-  # => [:a :b [:x :y]]
+  # =>
+  [:a :b [:x :y]]
 
   )
 
@@ -107,7 +109,8 @@
   (merge {}
          (-> (zip [:a [:b [:x :y]]])
              state))
-  # => @{}
+  # =>
+  @{}
 
   )
 
@@ -122,7 +125,8 @@
 (comment
 
   (branch? (zip [:a :b [:x :y]]))
-  # => true
+  # =>
+  true
 
   )
 
@@ -139,7 +143,8 @@
 (comment
 
  (children (zip [:a :b [:x :y]]))
-  # => [:a :b [:x :y]]
+  # =>
+  [:a :b [:x :y]]
 
   )
 
@@ -155,7 +160,8 @@
   # merge is used to "remove" the prototype table of `st`
   (merge {}
          (make-state (zip [:a :b [:x :y]])))
-  # => @{}
+  # =>
+  @{}
 
   )
 
@@ -183,19 +189,22 @@
 (comment
 
   (node (down (zip [:a :b [:x :y]])))
-  # => :a
+  # =>
+  :a
 
   (-> (zip [:a :b [:x :y]])
       down
       branch?)
-  # => false
+  # =>
+  false
 
   (try
     (-> (zip [:a])
         down
         children)
     ([e] e))
-  # => "Called `children` on a non-branch zloc"
+  # =>
+  "Called `children` on a non-branch zloc"
 
   (deep=
     #
@@ -209,7 +218,8 @@
        :pnodes ((:a (:b (:x :y))))
        :pstate @{}
        :rs ((:b (:x :y)))})
-  # => true
+  # =>
+  true
 
   )
 
@@ -237,12 +247,14 @@
       down
       right
       node)
-  # => :b
+  # =>
+  :b
 
   (-> (zip [:a])
       down
       right)
-  # => nil
+  # =>
+  nil
 
   )
 
@@ -257,7 +269,8 @@
 
   (make-node (zip [:a :b [:x :y]])
              [:a :b] [:x :y])
-  # => [:x :y]
+  # =>
+  [:x :y]
 
   )
 
@@ -295,7 +308,8 @@
         down
         up)
     m-zip)
-  # => true
+  # =>
+  true
 
   (deep=
     (-> m-zip
@@ -306,7 +320,8 @@
         up
         up)
     m-zip)
-  # => true
+  # =>
+  true
 
   )
 
@@ -333,14 +348,14 @@
   (def a-zip
     (zip [:a :b [:x :y]]))
 
-  (deep= (node a-zip)
-         (-> a-zip
-             down
-             right
-             right
-             down
-             root))
-    # => true
+  (node a-zip)
+  # =>
+  (-> a-zip
+      down
+      right
+      right
+      down
+      root)
 
   )
 
@@ -371,13 +386,15 @@
     (zip [:a :b [:x]]))
 
   (node (df-next a-zip))
-  # => :a
+  # =>
+  :a
 
   (-> a-zip
       df-next
       df-next
       node)
-  # => :b
+  # =>
+  :b
 
   (-> a-zip
       df-next
@@ -386,7 +403,8 @@
       df-next
       df-next
       end?)
-  # => true
+  # =>
+  true
 
   )
 
@@ -408,7 +426,8 @@
       down
       (replace :w)
       root)
-  # => [:w :b [:x :y]]
+  # =>
+  [:w :b [:x :y]]
 
   (-> (zip [:a :b [:x :y]])
       down
@@ -417,7 +436,8 @@
       down
       (replace :w)
       root)
-  # => [:a :b [:w :y]]
+  # =>
+  [:a :b [:w :y]]
 
   )
 
@@ -436,7 +456,8 @@
       down
       (edit inc)
       root)
-  # => [2 2 [8 9]]
+  # =>
+  [2 2 [8 9]]
 
   )
 
@@ -456,7 +477,8 @@
   (-> (zip [:a :b [:x :y]])
       (insert-child :c)
       root)
-  # => [:c :a :b [:x :y]]
+  # =>
+  [:c :a :b [:x :y]]
 
   )
 
@@ -476,7 +498,8 @@
   (-> (zip [:a :b [:x :y]])
       (append-child :c)
       root)
-  # => [:a :b [:x :y] :c]
+  # =>
+  [:a :b [:x :y] :c]
 
   )
 
@@ -507,7 +530,8 @@
       down
       rightmost
       node)
-  # => [:x :y]
+  # =>
+  [:x :y]
 
   )
 
@@ -555,12 +579,14 @@
       right
       remove
       node)
-  # => :a
+  # =>
+  :a
 
   (try
     (remove (zip [:a :b [:x :y]]))
     ([e] e))
-  # => "Called `remove` at root"
+  # =>
+  "Called `remove` at root"
 
   )
 
@@ -591,12 +617,14 @@
       right
       left
       node)
-  # => :b
+  # =>
+  :b
 
   (-> (zip [:a])
       down
       left)
-  # => nil
+  # =>
+  nil
 
   )
 
@@ -625,7 +653,8 @@
       right
       df-prev
       node)
-  # => :a
+  # =>
+  :a
 
   (-> (zip [:a :b [:x :y]])
       down
@@ -634,7 +663,8 @@
       down
       df-prev
       node)
-  # => [:x :y]
+  # =>
+  [:x :y]
 
   )
 
@@ -665,12 +695,14 @@
       down
       (insert-right :z)
       root)
-  # => [:a :z :b [:x :y]]
+  # =>
+  [:a :z :b [:x :y]]
 
   (try
     (insert-right a-zip :e)
     ([e] e))
-  # => "Called `insert-right` at root"
+  # =>
+  "Called `insert-right` at root"
 
   )
 
@@ -701,12 +733,14 @@
       down
       (insert-left :z)
       root)
-  # => [:z :a :b [:x :y]]
+  # =>
+  [:z :a :b [:x :y]]
 
   (try
     (insert-left a-zip :e)
     ([e] e))
-  # => "Called `insert-left` at root"
+  # =>
+  "Called `insert-left` at root"
 
   )
 
@@ -721,7 +755,8 @@
   (-> (zip [:a :b [:x :y]])
       down
       rights)
-  # => [:b [:x :y]]
+  # =>
+  [:b [:x :y]]
 
   )
 
@@ -738,14 +773,16 @@
   (-> (zip [:a :b])
       down
       lefts)
-  # => []
+  # =>
+  []
 
   (-> (zip [:a :b [:x :y]])
       down
       right
       right
       lefts)
-  # => [:a :b]
+  # =>
+  [:a :b]
 
   )
 
@@ -775,14 +812,16 @@
       down
       leftmost
       node)
-  # => :a
+  # =>
+  :a
 
   (-> (zip [:a :b [:x :y]])
       down
       rightmost
       leftmost
       node)
-  # => :a
+  # =>
+  :a
 
   )
 
@@ -795,12 +834,14 @@
 (comment
 
   (path (zip [:a :b [:x :y]]))
-  # => nil
+  # =>
+  nil
 
   (-> (zip [:a :b [:x :y]])
       down
       path)
-  # => [[:a :b [:x :y]]]
+  # =>
+  [[:a :b [:x :y]]]
 
   (-> (zip [:a :b [:x :y]])
       down
@@ -808,7 +849,8 @@
       right
       down
       path)
-  # => [[:a :b [:x :y]] [:x :y]]
+  # =>
+  [[:a :b [:x :y]] [:x :y]]
 
  )
 
@@ -846,7 +888,8 @@
                       #
                       true))
       node)
-  # => [:symbol "+"]
+  # =>
+  [:symbol "+"]
 
   )
 
@@ -873,14 +916,16 @@
                       :b
                       true))
       node)
-  # => :b
+  # =>
+  :b
 
   (-> (zip [:a :b :c])
       down
       (search-from |(match (node $)
                       :d
                       true)))
-  # => nil
+  # =>
+  nil
 
   (-> (zip [:a :b :c])
       down
@@ -888,7 +933,8 @@
                       :a
                       true))
       node)
-  # => :a
+  # =>
+  :a
 
   )
 
@@ -916,14 +962,16 @@
                        true))
       left
       node)
-  # => :a
+  # =>
+  :a
 
   (-> (zip [:b :a :b])
       down
       (search-after |(match (node $)
                        :d
                        true)))
-  # => nil
+  # =>
+  nil
 
   (-> (zip [:a [:b :c [2 [3 :smile] 5]]])
       (search-after |(match (node $)
@@ -931,7 +979,8 @@
                        true))
       down
       node)
-  # => 3
+  # =>
+  3
 
   )
 
@@ -971,19 +1020,22 @@
       right
       unwrap
       root)
-  # => [:a :b :x :y]
+  # =>
+  [:a :b :x :y]
 
   (-> (zip [:a :b [:x :y]])
       down
       unwrap
       root)
-  # => [:a :b [:x :y]]
+  # =>
+  [:a :b [:x :y]]
 
   (-> (zip [[:a]])
       down
       unwrap
       root)
-  # => [:a]
+  # =>
+  [:a]
 
   (-> (zip [[:a :b] [:x :y]])
       down
@@ -991,13 +1043,15 @@
       remove
       unwrap
       root)
-  # => [:b [:x :y]]
+  # =>
+  [:b [:x :y]]
 
   (try
     (-> (zip [:a :b [:x :y]])
         unwrap)
     ([e] e))
-  # => "Called `unwrap` at root"
+  # =>
+  "Called `unwrap` at root"
 
   )
 
@@ -1065,26 +1119,31 @@
         right))
 
   (node start-zloc)
-  # => [:b]
+  # =>
+  [:b]
 
   (-> (wrap start-zloc [])
       root)
-  # => [:a [[:b]] :c :x]
+  # =>
+  [:a [[:b]] :c :x]
 
   (def end-zloc
     (right start-zloc))
 
   (node end-zloc)
-  # => :c
+  # =>
+  :c
 
   (-> (wrap start-zloc [] end-zloc)
       root)
-  # => [:a [[:b] :c] :x]
+  # =>
+  [:a [[:b] :c] :x]
 
   (try
     (-> (wrap end-zloc [] start-zloc)
         root)
     ([e] e))
-  # => "Called `wrap` with invalid value for `end-zloc`."
+  # =>
+  "Called `wrap` with invalid value for `end-zloc`."
 
   )

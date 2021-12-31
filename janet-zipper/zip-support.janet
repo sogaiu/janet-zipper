@@ -15,10 +15,12 @@
 (comment
 
   (butlast @[:a :b :c])
-  # => @[:a :b]
+  # =>
+  @[:a :b]
 
   (butlast [:a])
-  # => []
+  # =>
+  []
 
   )
 
@@ -33,10 +35,12 @@
 (comment
 
   (rest [:a :b :c])
-  # => [:b :c]
+  # =>
+  [:b :c]
 
   (rest @[:a])
-  # => @[]
+  # =>
+  @[]
 
   )
 
@@ -50,13 +54,16 @@
 (comment
 
   (tuple-push [:a :b] :c)
-  # => [:a :b :c]
+  # =>
+  [:a :b :c]
 
   (tuple-push nil :a)
-  # => [:a]
+  # =>
+  [:a]
 
   (tuple-push @[] :a)
-  # => [:a]
+  # =>
+  [:a]
 
   )
 
@@ -69,18 +76,22 @@
 (comment
 
   (to-entries {:a 1 :b 2})
-  # => @[[:a 1] [:b 2]]
+  # =>
+  @[[:a 1] [:b 2]]
 
   (to-entries {})
-  # => @[]
+  # =>
+  @[]
 
   (to-entries @{:a 1})
-  # => @[[:a 1]]
+  # =>
+  @[[:a 1]]
 
   # XXX: leaving non-dictionaries alone and passing through...
   #      is this desirable over erroring?
   (to-entries [:a :b :c])
-  # => [:a :b :c]
+  # =>
+  [:a :b :c]
 
   )
 
@@ -94,16 +105,20 @@
 (comment
 
   (first-rest-maybe-all [:a :b])
-  # => [:a [:b] [:a :b]]
+  # =>
+  [:a [:b] [:a :b]]
 
   (first-rest-maybe-all @[:a])
-  # => [:a @[] @[:a]]
+  # =>
+  [:a @[] @[:a]]
 
   (first-rest-maybe-all [])
-  # => [nil nil nil]
+  # =>
+  [nil nil nil]
 
   # XXX: is this what we want?
   (first-rest-maybe-all nil)
-  # => [nil nil nil]
+  # =>
+  [nil nil nil]
 
   )

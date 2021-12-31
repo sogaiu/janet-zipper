@@ -31,21 +31,21 @@
   (def a-zip
     (z/zip a-node))
 
-  (= (length a-zip)
-     2)
-  # => true
+  (length a-zip)
+  # =>
+  2
 
-  (deep= a-node
-         (z/node a-zip))
-  # => true
+  a-node
+  # =>
+  (z/node a-zip)
 
   (dictionary? (z/state a-zip))
-  # => true
+  # =>
+  true
 
-  (deep=
-    (sort (keys (table/getproto (a-zip 1))))
-    (sort @[:branch? :children :make-node :make-state]))
-  # => true
+  (sort (keys (table/getproto (a-zip 1))))
+  # =>
+  (sort @[:branch? :children :make-node :make-state])
 
   )
 
@@ -77,6 +77,7 @@
     (all |(= :function
              (type (pt $)))
          [:branch? :children :make-node :make-state]))
-  # => true
+  # =>
+  true
 
   )

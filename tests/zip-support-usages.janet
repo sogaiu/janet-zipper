@@ -3,73 +3,91 @@
 (comment
 
   (s/butlast [])
-  # => nil
+  # =>
+  nil
 
   (s/butlast @[])
-  # => nil
+  # =>
+  nil
 
   (s/butlast [:a :b :c])
-  # => [:a :b]
+  # =>
+  [:a :b]
 
   (s/butlast @[:a])
-  # => @[]
+  # =>
+  @[]
 
   )
 
 (comment
 
   (s/rest [])
-  # => nil
+  # =>
+  nil
 
   (s/rest @[])
-  # => nil
+  # =>
+  nil
 
   (s/rest [:a])
-  # => []
+  # =>
+  []
 
   (s/rest [:a :b])
-  # => [:b]
+  # =>
+  [:b]
 
   (s/rest @[:a :b])
-  # => @[:b]
+  # =>
+  @[:b]
 
   (s/rest @[:a :b :c])
-  # => @[:b :c]
+  # =>
+  @[:b :c]
 
   )
 
 (comment
 
   (s/tuple-push [:a] :b :c)
-  # => [:a :b :c]
+  # =>
+  [:a :b :c]
 
   (s/tuple-push [] :a)
-  # => [:a]
+  # =>
+  [:a]
 
   )
 
 (comment
 
   (s/to-entries {:a 1})
-  # => @[[:a 1]]
+  # =>
+  @[[:a 1]]
 
   (s/to-entries @{:a 1 :b 2})
-  # => @[[:a 1] [:b 2]]
+  # =>
+  @[[:a 1] [:b 2]]
 
   (s/to-entries @{:a 1})
-  # => @[[:a 1]]
+  # =>
+  @[[:a 1]]
 
   (s/to-entries @{})
-  # => @[]
+  # =>
+  @[]
 
   )
 
 (comment
 
   (s/first-rest-maybe-all [:a])
-  # => [:a [] [:a]]
+  # =>
+  [:a [] [:a]]
 
   (s/first-rest-maybe-all @[:a :b])
-  # => [:a @[:b] @[:a :b]]
+  # =>
+  [:a @[:b] @[:a :b]]
 
   )

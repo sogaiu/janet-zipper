@@ -15,7 +15,8 @@
 
   (deep= (z/zip a-node)
          [a-node @{}])
-  # => true
+  # =>
+  true
 
   )
 
@@ -25,9 +26,9 @@
   (def a-node
     [:a [:b [:x :y]]])
 
-  (deep= (z/node (z/zip a-node))
-         a-node)
-  # => true
+  (z/node (z/zip a-node))
+  # =>
+  a-node
 
   )
 
@@ -37,7 +38,8 @@
   # merge is used to "remove" the prototype table of `st`
   (merge {}
          (z/state (z/zip [:a :b [:x :y]])))
-  # => @{}
+  # =>
+  @{}
 
   (deep=
     #
@@ -50,7 +52,8 @@
        :pnodes ((:a :b (:x :y)))
        :pstate @{}
        :rs (:b (:x :y))})
-  # => true
+  # =>
+  true
 
   (deep=
     #
@@ -68,7 +71,8 @@
                  :pstate @{}
                  :rs ()}
        :rs ()})
-  # => true
+  # =>
+  true
 
   )
 
@@ -79,20 +83,23 @@
     (z/zip [:a [:b [:x :y]]]))
 
   (z/branch? a-zip)
-  # => true
+  # =>
+  true
 
   (-> a-zip
       z/down
       z/right
       z/branch?)
-  # => true
+  # =>
+  true
 
   (-> a-zip
       z/down
       z/right
       z/down
       z/branch?)
-  # => false
+  # =>
+  false
 
   (-> a-zip
       z/down
@@ -100,7 +107,8 @@
       z/down
       z/right
       z/branch?)
-  # => true
+  # =>
+  true
 
   )
 
@@ -113,7 +121,8 @@
   (-> a-zip
       z/children
       first)
-  # => :a
+  # =>
+  :a
 
   (-> a-zip
       z/down
@@ -121,7 +130,8 @@
       z/down
       z/right
       z/children)
-  # => [:x :y]
+  # =>
+  [:x :y]
 
   )
 
@@ -138,13 +148,15 @@
   (-> (z/zip [:a])
       z/down
       z/node)
-  # => :a
+  # =>
+  :a
 
   (-> (z/zip [[[:a :b] :c]])
       z/down
       z/down
       z/children)
-  # => [:a :b]
+  # =>
+  [:a :b]
 
   )
 
@@ -157,14 +169,16 @@
       z/right
       z/down
       z/node)
-  # => :x
+  # =>
+  :x
 
   (-> (z/zip [:a :b [:x :y]])
       z/down
       z/right
       z/right
       z/branch?)
-  # => true
+  # =>
+  true
 
   (-> [:code
        [:tuple
@@ -177,7 +191,8 @@
       z/right
       z/right
       z/node)
-  # => [:whitespace " "]
+  # =>
+  [:whitespace " "]
 
   )
 
@@ -211,7 +226,8 @@
       z/right
       z/up
       z/node)
-  # => (z/node a-zip)
+  # =>
+  (z/node a-zip)
 
   )
 
@@ -251,7 +267,8 @@
       z/df-next
       z/df-next
       z/node)
-  # => [:x]
+  # =>
+  [:x]
 
   (-> a-zip
       z/df-next
@@ -259,7 +276,8 @@
       z/df-next
       z/df-next
       z/node)
-  # => :x
+  # =>
+  :x
 
   (-> a-zip
       z/df-next
@@ -268,13 +286,15 @@
       z/df-next
       z/df-next
       z/node)
-  # => [:a :b [:x]]
+  # =>
+  [:a :b [:x]]
 
   (-> (z/zip [:a])
       z/df-next
       z/df-next
       z/end?)
-  # => true
+  # =>
+  true
 
   )
 
@@ -289,7 +309,8 @@
       z/right
       (z/replace [:a :b])
       z/root)
-  # => [:x :y [:a :b]]
+  # =>
+  [:x :y [:a :b]]
 
   )
 
@@ -304,7 +325,8 @@
       z/right
       (z/edit dec)
       z/root)
-  # => [1 2 [8 8]]
+  # =>
+  [1 2 [8 8]]
 
   (-> (z/zip [1 2 [8 9]])
       z/down
@@ -313,7 +335,8 @@
       z/down
       (z/edit + 2)
       z/root)
-  # => [1 2 [10 9]]
+  # =>
+  [1 2 [10 9]]
 
   )
 
@@ -330,7 +353,8 @@
       z/down
       (z/insert-child :s)
       z/root)
-  # => [:a :b [[:s] :v :w :x :y]]
+  # =>
+  [:a :b [[:s] :v :w :x :y]]
 
   )
 
@@ -347,7 +371,8 @@
       z/right
       (z/append-child :joy)
       z/root)
-  # => [:a :b [:x :y [:joy]]]
+  # =>
+  [:a :b [:x :y [:joy]]]
 
   )
 
@@ -360,7 +385,8 @@
       z/right
       z/rightmost
       z/node)
-  # => [:x :y]
+  # =>
+  [:x :y]
 
   (-> (z/zip [:a :b [:x :y]])
       z/down
@@ -369,7 +395,8 @@
       z/down
       z/rightmost
       z/node)
-  # => :y
+  # =>
+  :y
 
   (-> (z/zip ['def 'm [:a 1 :b 2]])
       z/down
@@ -377,7 +404,8 @@
       z/down
       z/rightmost
       z/node)
-  # => 2
+  # =>
+  2
 
   (-> (z/zip ['def 'm {:a 1 :b 2}])
       z/down
@@ -385,7 +413,8 @@
       z/down
       z/rightmost
       z/node)
-  # => [:b 2]
+  # =>
+  [:b 2]
 
   )
 
@@ -397,7 +426,8 @@
       z/right
       z/remove
       z/root)
-  # => [:a [:x :y]]
+  # =>
+  [:a [:x :y]]
 
   (-> (z/zip [:a :b [:x :y]])
       z/down
@@ -405,7 +435,8 @@
       z/right
       z/remove
       z/root)
-  # => [:a :b]
+  # =>
+  [:a :b]
 
   (-> (z/zip [:a :b :c])
       z/down
@@ -413,7 +444,8 @@
       z/right
       z/remove
       z/root)
-  # => [:a :b]
+  # =>
+  [:a :b]
 
   (-> (z/zip [:a :b :c])
       z/down
@@ -422,14 +454,16 @@
       z/right
       z/remove
       z/root)
-  # => [:a]
+  # =>
+  [:a]
 
   # tests (length ls) == 0 case
   (-> (z/zip [:a :b :c])
       z/down
       z/remove
       z/root)
-  # => [:b :c]
+  # =>
+  [:b :c]
 
   )
 
@@ -444,7 +478,8 @@
              z/down
              z/right
              z/left))
-  # => true
+  # =>
+  true
 
   (-> a-zip
       z/down
@@ -454,7 +489,8 @@
       z/right
       z/left
       z/node)
-  # => :x
+  # =>
+  :x
 
   )
 
@@ -467,7 +503,8 @@
       z/right
       z/df-prev
       z/node)
-  # => :b
+  # =>
+  :b
 
   (-> (z/zip [:a :b [:x :y]])
       z/down
@@ -477,7 +514,8 @@
       z/df-prev
       z/df-prev
       z/node)
-  # => :b
+  # =>
+  :b
 
   )
 
@@ -490,7 +528,8 @@
       z/down
       (z/insert-right :c)
       z/root)
-  # => [:a [:b :c]]
+  # =>
+  [:a [:b :c]]
 
   (-> (z/zip [:a])
       z/down
@@ -499,7 +538,8 @@
       z/down
       (z/insert-right :c)
       z/root)
-  # => [:a [:b :c]]
+  # =>
+  [:a [:b :c]]
 
   )
 
@@ -510,7 +550,8 @@
       z/down
       (z/insert-left :a)
       z/root)
-  # => [:a :b]
+  # =>
+  [:a :b]
 
   (-> (z/zip [:c])
       z/down
@@ -519,7 +560,8 @@
       z/down
       (z/insert-left :a)
       z/root)
-  # => [[:a :b] :c]
+  # =>
+  [[:a :b] :c]
 
   )
 
@@ -529,7 +571,8 @@
   (-> (z/zip [:a :b])
       z/down
       z/rights)
-  # => [:b]
+  # =>
+  [:b]
 
   (-> (z/zip [:a :b [:x :y]])
       z/down
@@ -537,7 +580,8 @@
       z/right
       z/down
       z/rights)
-  # => [:y]
+  # =>
+  [:y]
 
   )
 
@@ -548,7 +592,8 @@
       z/down
       z/right
       z/lefts)
-  # => [:a]
+  # =>
+  [:a]
 
   (-> (z/zip [:a :b [:x :y]])
       z/down
@@ -557,7 +602,8 @@
       z/down
       z/right
       z/lefts)
-  # => [:x]
+  # =>
+  [:x]
 
   )
 
@@ -571,7 +617,8 @@
       z/down
       z/leftmost
       z/node)
-  # => :x
+  # =>
+  :x
 
   )
 
@@ -599,7 +646,8 @@
       z/down
       z/right
       z/node)
-  # => :prize
+  # =>
+  :prize
 
   )
 
@@ -615,7 +663,8 @@
                         :a
                         true))
       z/node)
-  # => :a
+  # =>
+  :a
 
   )
 
@@ -636,7 +685,8 @@
       z/down
       z/right
       z/node)
-  # => :prize
+  # =>
+  :prize
 
   )
 
@@ -651,7 +701,8 @@
       z/right
       z/unwrap
       z/root)
-  # => [:a :b :x :y :z]
+  # =>
+  [:a :b :x :y :z]
 
   )
 
@@ -663,52 +714,63 @@
         z/down))
 
   (z/node a-zloc)
-  # => :a
+  # =>
+  :a
 
   (def b-zloc
     (z/right a-zloc))
 
   (z/node b-zloc)
-  # => :b
+  # =>
+  :b
 
   (def c-zloc
     (z/right b-zloc))
 
   (z/node c-zloc)
-  # => :c
+  # =>
+  :c
 
   (def x-zloc
     (z/right c-zloc))
 
   (z/node x-zloc)
-  # => :x
+  # =>
+  :x
 
   (-> (z/wrap a-zloc [] b-zloc)
       z/root)
-  # => [[:a :b] :c :x]
+  # =>
+  [[:a :b] :c :x]
 
   (-> (z/wrap a-zloc [] c-zloc)
       z/root)
-  # => [[:a :b :c] :x]
+  # =>
+  [[:a :b :c] :x]
 
   (-> (z/wrap a-zloc [] x-zloc)
       z/root)
-  # => [[:a :b :c :x]]
+  # =>
+  [[:a :b :c :x]]
 
   (-> (z/wrap b-zloc [] x-zloc)
       z/root)
-  # => [:a [:b :c :x]]
+  # =>
+  [:a [:b :c :x]]
 
   (-> (z/wrap c-zloc [])
       z/root)
-  # => [:a :b [:c] :x]
+  # =>
+  [:a :b [:c] :x]
 
   (-> (z/wrap c-zloc [] x-zloc)
       z/root)
-  # => [:a :b [:c :x]]
+  # =>
+  [:a :b [:c :x]]
 
   (-> (z/wrap x-zloc [])
       z/root)
-  # => [:a :b :c [:x]]
+  # =>
+  [:a :b :c [:x]]
 
   )
