@@ -66,7 +66,7 @@
   # =>
   @[[:a 1]]
 
-  (z/s/to-entries @{:a 1 :b 2})
+  (sort (z/s/to-entries @{:a 1 :b 2}))
   # =>
   @[[:a 1] [:b 2]]
 
