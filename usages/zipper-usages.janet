@@ -499,15 +499,6 @@
   # =>
   2
 
-  (-> (z/zip ['def 'm {:a 1 :b 2}])
-      z/down
-      z/rightmost
-      z/down
-      z/rightmost
-      z/node)
-  # =>
-  [:b 2]
-
   )
 
 # remove
